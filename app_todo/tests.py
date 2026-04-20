@@ -22,27 +22,27 @@ class TodoListViewTest(TestCase):
         self.client.force_login(self.user)
 
     def test_todo_list_loads(self):
-        response = self.client.get(reverse('todo:list'))
+        response = self.client.get(reverse('app_todo:list'))
         self.assertEqual(response.status_code, 200)
 
     def test_todo_list_shows_only_own_todos(self):
         other_user = make_verified_user('other')
         TodoItem.objects.create(user=self.user, title='Mine')
         TodoItem.objects.create(user=other_user, title='Not mine')
-        response = self.client.get(reverse('todo:list'))
+        response = self.client.get(reverse('app_todo:list'))
         self.assertContains(response, 'Mine')
         self.assertNotContains(response, 'Not mine')
 
     def test_unauthenticated_user_redirected(self):
         self.client.logout()
-        response = self.client.get(reverse('todo:list'))
+        response = self.client.get(reverse('app_todo:list'))
         self.assertEqual(response.status_code, 302)
 
     def test_unverified_user_redirected_to_verify(self):
         unverified = User.objects.create_user(username='unverified', password='pass', email_verified=False)
         self.client.force_login(unverified)
-        response = self.client.get(reverse('todo:list'))
-        self.assertRedirects(response, reverse('auth_app:verify_email_pending'))
+        response = self.client.get(reverse('app_todo:list'))
+        self.assertRedirects(response, reverse('app_auth:verify_email_pending'))
 
 
 class TodoCreateViewTest(TestCase):
@@ -51,16 +51,16 @@ class TodoCreateViewTest(TestCase):
         self.client.force_login(self.user)
 
     def test_create_todo(self):
-        response = self.client.post(reverse('todo:create'), {
+        response = self.client.post(reverse('app_todo:create'), {
             'title': 'New task',
             'description': 'Details',
             'is_done': False,
         })
-        self.assertRedirects(response, reverse('todo:list'))
+        self.assertRedirects(response, reverse('app_todo:list'))
         self.assertTrue(TodoItem.objects.filter(user=self.user, title='New task').exists())
 
     def test_create_todo_assigns_current_user(self):
-        self.client.post(reverse('todo:create'), {
+        self.client.post(reverse('app_todo:create'), {
             'title': 'Owned task',
             'description': '',
             'is_done': False,
@@ -77,10 +77,10 @@ class TodoUpdateViewTest(TestCase):
 
     def test_update_own_todo(self):
         response = self.client.post(
-            reverse('todo:update', kwargs={'pk': self.item.pk}),
+            reverse('app_todo:update', kwargs={'pk': self.item.pk}),
             {'title': 'Updated', 'description': '', 'is_done': False},
         )
-        self.assertRedirects(response, reverse('todo:list'))
+        self.assertRedirects(response, reverse('app_todo:list'))
         self.item.refresh_from_db()
         self.assertEqual(self.item.title, 'Updated')
 
@@ -88,7 +88,7 @@ class TodoUpdateViewTest(TestCase):
         other_user = make_verified_user('other2')
         other_item = TodoItem.objects.create(user=other_user, title='Theirs')
         response = self.client.post(
-            reverse('todo:update', kwargs={'pk': other_item.pk}),
+            reverse('app_todo:update', kwargs={'pk': other_item.pk}),
             {'title': 'Stolen', 'description': '', 'is_done': False},
         )
         self.assertEqual(response.status_code, 404)
@@ -101,14 +101,14 @@ class TodoDeleteViewTest(TestCase):
         self.item = TodoItem.objects.create(user=self.user, title='To delete')
 
     def test_delete_own_todo(self):
-        response = self.client.post(reverse('todo:delete', kwargs={'pk': self.item.pk}))
-        self.assertRedirects(response, reverse('todo:list'))
+        response = self.client.post(reverse('app_todo:delete', kwargs={'pk': self.item.pk}))
+        self.assertRedirects(response, reverse('app_todo:list'))
         self.assertFalse(TodoItem.objects.filter(pk=self.item.pk).exists())
 
     def test_cannot_delete_other_users_todo(self):
         other_user = make_verified_user('other3')
         other_item = TodoItem.objects.create(user=other_user, title='Keep this')
-        response = self.client.post(reverse('todo:delete', kwargs={'pk': other_item.pk}))
+        response = self.client.post(reverse('app_todo:delete', kwargs={'pk': other_item.pk}))
         self.assertEqual(response.status_code, 404)
         self.assertTrue(TodoItem.objects.filter(pk=other_item.pk).exists())
 
@@ -120,14 +120,14 @@ class TodoToggleViewTest(TestCase):
 
     def test_toggle_changes_done_status(self):
         item = TodoItem.objects.create(user=self.user, title='Toggle me', is_done=False)
-        self.client.get(reverse('todo:toggle', kwargs={'pk': item.pk}))
+        self.client.get(reverse('app_todo:toggle', kwargs={'pk': item.pk}))
         item.refresh_from_db()
         self.assertTrue(item.is_done)
 
     def test_toggle_twice_restores_status(self):
         item = TodoItem.objects.create(user=self.user, title='Toggle twice', is_done=False)
-        self.client.get(reverse('todo:toggle', kwargs={'pk': item.pk}))
-        self.client.get(reverse('todo:toggle', kwargs={'pk': item.pk}))
+        self.client.get(reverse('app_todo:toggle', kwargs={'pk': item.pk}))
+        self.client.get(reverse('app_todo:toggle', kwargs={'pk': item.pk}))
         item.refresh_from_db()
         self.assertFalse(item.is_done)
 
