@@ -53,4 +53,4 @@ Dann im Browser öffnen:
 - Permission-Mixins / Decorators
 - API mit Django REST Framework
 - Tests mit `pytest` oder Django TestCase
-# Django_Working-with-Apps
+
