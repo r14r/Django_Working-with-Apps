@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}Group Management{% endblock %}
+
+{% block content %}
+<div class="p-card">
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem;">
+        <h2 style="margin:0; color: var(--primary-color);"><i class="pi pi-tag"></i> Group Management</h2>
+        <div style="display:flex; gap:0.5rem;">
+            <a href="{% url 'app_admin:group_add' %}" class="btn btn-primary btn-sm"><i class="pi pi-plus"></i> Add Group</a>
+            <a href="{% url 'app_admin:user_list' %}" class="btn btn-secondary btn-sm"><i class="pi pi-users"></i> Back to Users</a>
+        </div>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Group Name</th>
+                <th>Permissions</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for group in groups %}
+            <tr>
+                <td><strong>{{ group.name }}</strong></td>
+                <td>
+                    {% with perms_count=group.permissions.count %}
+                        <span class="badge badge-secondary">{{ perms_count }} permission{{ perms_count|pluralize }}</span>
+                    {% endwith %}
+                </td>
+                <td>
+                    <a href="{% url 'app_admin:group_edit' group.pk %}" class="btn btn-secondary btn-sm"><i class="pi pi-pencil"></i> Edit</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="3" style="text-align:center; padding:2rem; color: var(--text-color-secondary);">No groups found.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

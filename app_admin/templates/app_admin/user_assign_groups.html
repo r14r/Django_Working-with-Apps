@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Assign Groups: {{ managed_user.username }}{% endblock %}
+
+{% block content %}
+<div style="max-width: 540px; margin: 2rem auto;">
+    <div class="p-card">
+        <h2 style="margin-top:0; color: var(--primary-color);"><i class="pi pi-tag"></i> Assign Groups: {{ managed_user.username }}</h2>
+        <p style="color: var(--text-color-secondary);">Select the groups for <strong>{{ managed_user.username }}</strong>:</p>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-field">
+                <div style="max-height: 280px; overflow-y: auto; border: 1px solid var(--surface-border); border-radius: 6px; padding: 0.75rem;">
+                    {{ form.groups }}
+                </div>
+                {% if form.groups.errors %}<ul class="errorlist">{% for e in form.groups.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary"><i class="pi pi-save"></i> Save Groups</button>
+                <a href="{% url 'app_admin:user_list' %}" class="btn btn-secondary"><i class="pi pi-arrow-left"></i> Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}E-Mail-Bestätigung ausstehend{% endblock %}
+
+{% block content %}
+<div style="max-width: 500px; margin: 3rem auto;">
+    <div class="p-card">
+        <h2 style="margin-top:0; color: var(--primary-color);"><i class="pi pi-envelope"></i> E-Mail bestätigen</h2>
+        <p>Wir haben dir eine E-Mail geschickt. Bitte klicke auf den Link in der E-Mail, um dein Konto zu aktivieren.</p>
+        <p>Keine E-Mail erhalten? Prüfe deinen Spam-Ordner oder fordere eine neue an:</p>
+        <form method="post" action="{% url 'app_auth:resend_verification' %}">
+            {% csrf_token %}
+            <div class="form-field">
+                <label for="email">Deine E-Mail-Adresse:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary"><i class="pi pi-send"></i> Bestätigungsmail erneut senden</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
