@@ -2,17 +2,19 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 
+from auth_app.decorators import email_verified_required
+
 from .forms import TodoItemForm
 from .models import TodoItem
 
 
-@login_required
+@email_verified_required
 def todo_list(request):
     items = TodoItem.objects.filter(user=request.user)
     return render(request, 'todo/todo_list.html', {'items': items})
 
 
-@login_required
+@email_verified_required
 def todo_create(request):
     if request.method == 'POST':
         form = TodoItemForm(request.POST)
@@ -28,7 +30,7 @@ def todo_create(request):
     return render(request, 'todo/todo_form.html', {'form': form, 'page_title': 'Neues To-do'})
 
 
-@login_required
+@email_verified_required
 def todo_update(request, pk: int):
     item = get_object_or_404(TodoItem, pk=pk, user=request.user)
 
@@ -44,7 +46,7 @@ def todo_update(request, pk: int):
     return render(request, 'todo/todo_form.html', {'form': form, 'page_title': 'To-do bearbeiten'})
 
 
-@login_required
+@email_verified_required
 def todo_delete(request, pk: int):
     item = get_object_or_404(TodoItem, pk=pk, user=request.user)
     if request.method == 'POST':
@@ -55,7 +57,7 @@ def todo_delete(request, pk: int):
     return render(request, 'todo/todo_confirm_delete.html', {'item': item})
 
 
-@login_required
+@email_verified_required
 def todo_toggle(request, pk: int):
     item = get_object_or_404(TodoItem, pk=pk, user=request.user)
     item.is_done = not item.is_done

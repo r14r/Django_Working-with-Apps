@@ -7,6 +7,9 @@ from .views import (
     UserPasswordResetDoneView,
     UserPasswordResetView,
     register_view,
+    resend_verification_email_view,
+    verify_email_pending_view,
+    verify_email_view,
 )
 
 app_name = 'auth_app'
@@ -27,4 +30,7 @@ urlpatterns = [
         PasswordResetCompleteView.as_view(template_name='auth_app/password_reset_complete.html'),
         name='password_reset_complete',
     ),
+    path('verify-email/pending/', verify_email_pending_view, name='verify_email_pending'),
+    path('verify-email/<uuid:token>/', verify_email_view, name='verify_email'),
+    path('verify-email/resend/', resend_verification_email_view, name='resend_verification'),
 ]

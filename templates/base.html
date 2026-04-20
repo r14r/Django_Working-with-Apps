@@ -11,6 +11,7 @@
         .card { background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); margin-bottom: 1rem; }
         .messages { list-style: none; padding: 0; }
         .messages li { background: #e8f4ea; border-left: 5px solid #2d7a3f; padding: 0.8rem; margin-bottom: 0.8rem; }
+        .banner-warning { background: #fff3cd; border-left: 5px solid #e6a817; padding: 0.8rem; margin-bottom: 1rem; }
         form p { margin-bottom: 1rem; }
         input, textarea { width: 100%; padding: 0.7rem; box-sizing: border-box; }
         table { width: 100%; border-collapse: collapse; background: white; }
@@ -28,7 +29,7 @@
         {% if user.is_authenticated %}
             <form class="inline-form" method="post" action="{% url 'auth_app:logout' %}">
                 {% csrf_token %}
-                <button type="submit" class="secondary">Logout</button>
+                <button type="submit" class="secondary">Logout ({{ user.username }}{% if user.role %} · {{ user.role }}{% endif %})</button>
             </form>
         {% else %}
             <a href="{% url 'auth_app:login' %}">Login</a>
@@ -42,6 +43,13 @@
                 <li>{{ message }}</li>
             {% endfor %}
         </ul>
+    {% endif %}
+
+    {% if user.is_authenticated and not user.email_verified %}
+        <div class="banner-warning">
+            E-Mail-Adresse noch nicht bestätigt.
+            <a href="{% url 'auth_app:verify_email_pending' %}">Jetzt bestätigen</a>
+        </div>
     {% endif %}
 
     {% block content %}{% endblock %}
