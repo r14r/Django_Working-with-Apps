@@ -3,20 +3,29 @@
 {% block title %}Start{% endblock %}
 
 {% block content %}
-<div class="card">
-    <h1>Django Starter App</h1>
+<div class="p-card">
+    <h1 style="color: var(--primary-color);"><i class="pi pi-home"></i> Django Starter App</h1>
     <p>Dieses Beispielprojekt enthält:</p>
-    <ul>
-        <li><strong>main</strong> als Rahmen-App</li>
-        <li><strong>auth_app</strong> für Registrierung, Login, Logout und Passwort-Reset</li>
-        <li><strong>todo</strong> als geschützte To-do-App</li>
+    <ul style="line-height:2;">
+        <li><strong>main</strong> – Rahmen-App</li>
+        <li><strong>app_auth</strong> – Registrierung, Login, Logout und Passwort-Reset</li>
+        <li><strong>app_todo</strong> – geschützte To-do-App</li>
+        <li><strong>app_admin</strong> – User- und Gruppenverwaltung (Staff only)</li>
     </ul>
 
     {% if user.is_authenticated %}
         <p>Du bist eingeloggt als <strong>{{ user.username }}</strong>.</p>
-        <p><a href="{% url 'todo:list' %}">Zur To-do-Liste</a></p>
+        <div class="form-actions">
+            <a href="{% url 'app_todo:list' %}" class="btn btn-primary"><i class="pi pi-list"></i> Zur To-do-Liste</a>
+            {% if user.is_staff or user.is_superuser %}
+            <a href="{% url 'app_admin:user_list' %}" class="btn btn-secondary"><i class="pi pi-users"></i> Admin</a>
+            {% endif %}
+        </div>
     {% else %}
-        <p><a href="{% url 'auth_app:register' %}">Jetzt registrieren</a> oder <a href="{% url 'auth_app:login' %}">anmelden</a>.</p>
+        <div class="form-actions">
+            <a href="{% url 'app_auth:register' %}" class="btn btn-primary"><i class="pi pi-user-plus"></i> Jetzt registrieren</a>
+            <a href="{% url 'app_auth:login' %}" class="btn btn-secondary"><i class="pi pi-sign-in"></i> Anmelden</a>
+        </div>
     {% endif %}
 </div>
 {% endblock %}

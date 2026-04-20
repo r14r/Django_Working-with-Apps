@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div style="max-width: 640px; margin: 2rem auto;">
+    <div class="p-card">
+        <h2 style="margin-top:0; color: var(--primary-color);"><i class="pi pi-tag"></i> {{ title }}</h2>
+        <form method="post">
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="form-field">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {% if field.field.widget.input_type == 'checkbox' or field.name == 'permissions' %}
+                    <div style="max-height: 280px; overflow-y: auto; border: 1px solid var(--surface-border); border-radius: 6px; padding: 0.75rem;">
+                        {{ field }}
+                    </div>
+                {% else %}
+                    {{ field }}
+                {% endif %}
+                {% if field.errors %}<ul class="errorlist">{% for e in field.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+            </div>
+            {% endfor %}
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary"><i class="pi pi-save"></i> Save</button>
+                <a href="{% url 'app_admin:group_list' %}" class="btn btn-secondary"><i class="pi pi-arrow-left"></i> Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
