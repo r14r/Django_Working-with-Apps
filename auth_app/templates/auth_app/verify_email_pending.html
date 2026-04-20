@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}E-Mail-Bestätigung ausstehend{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>Bestätige deine E-Mail-Adresse</h1>
+    <p>Wir haben dir eine E-Mail geschickt. Bitte klicke auf den Link in der E-Mail, um dein Konto zu aktivieren.</p>
+    <p>Keine E-Mail erhalten? Prüfe deinen Spam-Ordner oder fordere eine neue an:</p>
+    <form method="post" action="{% url 'auth_app:resend_verification' %}">
+        {% csrf_token %}
+        <p>
+            <label for="email">Deine E-Mail-Adresse:</label><br>
+            <input type="email" id="email" name="email" required>
+        </p>
+        <button type="submit">Bestätigungsmail erneut senden</button>
+    </form>
+</div>
+{% endblock %}
