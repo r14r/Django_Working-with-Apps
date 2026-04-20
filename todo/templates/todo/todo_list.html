@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}Meine Todos{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>Meine To-dos</h1>
+    <p><a href="{% url 'todo:create' %}">Neues To-do anlegen</a></p>
+</div>
+
+<div class="card">
+    {% if items %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Titel</th>
+                    <th>Status</th>
+                    <th>Beschreibung</th>
+                    <th>Aktionen</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td>{{ item.title }}</td>
+                    <td>{% if item.is_done %}Erledigt{% else %}Offen{% endif %}</td>
+                    <td>{{ item.description|default:'-' }}</td>
+                    <td>
+                        <a href="{% url 'todo:update' item.pk %}">Bearbeiten</a> |
+                        <a href="{% url 'todo:toggle' item.pk %}">Toggle</a> |
+                        <a href="{% url 'todo:delete' item.pk %}">Löschen</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Du hast noch keine To-dos.</p>
+    {% endif %}
+</div>
+{% endblock %}

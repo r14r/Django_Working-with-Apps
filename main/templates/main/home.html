@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}Start{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>Django Starter App</h1>
+    <p>Dieses Beispielprojekt enthält:</p>
+    <ul>
+        <li><strong>main</strong> als Rahmen-App</li>
+        <li><strong>auth_app</strong> für Registrierung, Login, Logout und Passwort-Reset</li>
+        <li><strong>todo</strong> als geschützte To-do-App</li>
+    </ul>
+
+    {% if user.is_authenticated %}
+        <p>Du bist eingeloggt als <strong>{{ user.username }}</strong>.</p>
+        <p><a href="{% url 'todo:list' %}">Zur To-do-Liste</a></p>
+    {% else %}
+        <p><a href="{% url 'auth_app:register' %}">Jetzt registrieren</a> oder <a href="{% url 'auth_app:login' %}">anmelden</a>.</p>
+    {% endif %}
+</div>
+{% endblock %}
