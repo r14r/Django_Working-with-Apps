@@ -95,6 +95,9 @@ def _send_verification_email(request, user):
     verify_url = request.build_absolute_uri(
         reverse('auth_app:verify_email', kwargs={'token': str(user.email_verification_token)})
     )
+
+    print(f"verification url={verify_url}")
+    
     send_mail(
         subject='E-Mail-Adresse bestätigen',
         message=f'Hallo {user.username},\n\nbitte klicke auf folgenden Link, um deine E-Mail-Adresse zu bestätigen:\n\n{verify_url}\n\nDiesen Link nur einmalig verwenden.',
