@@ -13,7 +13,7 @@ install-pyproject:
 	uv pip install -r pyproject.toml
 	
 serve:
-	streamlit run app.py
+	python manage.py runserver
 
 run: serve
 
