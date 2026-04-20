@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Django App{% endblock %}</title>
-    <link rel="stylesheet" href="https://unpkg.com/primevue/resources/themes/lara-light-blue/theme.css">
+    <link rel="stylesheet" href="https://unpkg.com/primevue/resources/themes/lara-dark-blue/theme.css">
     <link rel="stylesheet" href="https://unpkg.com/primeicons/primeicons.css">
     <style>
         * { box-sizing: border-box; }
-        body { font-family: var(--font-family); background: #f5f7fa; margin: 0; padding: 0; }
+        body { font-family: var(--font-family); background: var(--surface-ground); color: var(--text-color); margin: 0; padding: 0; }
         .layout-wrapper { min-height: 100vh; display: flex; flex-direction: column; }
-        .layout-topbar { background: var(--primary-color); padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 60px; box-shadow: 0 2px 4px rgba(0,0,0,0.15); }
+        .layout-topbar { background: var(--primary-color); padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 60px; box-shadow: 0 2px 4px rgba(0,0,0,0.4); }
         .layout-topbar a { color: white; text-decoration: none; font-weight: 600; font-size: 1.1rem; }
         .layout-topbar nav { display: flex; gap: 1rem; align-items: center; }
         .layout-topbar nav a { font-size: 0.9rem; font-weight: 400; padding: 0.4rem 0.8rem; border-radius: 4px; transition: background 0.2s; }
@@ -18,37 +18,43 @@
         .layout-main { flex: 1; padding: 2rem; max-width: 1100px; margin: 0 auto; width: 100%; }
         .messages { margin-bottom: 1rem; }
         .message { padding: 0.75rem 1rem; border-radius: 6px; margin-bottom: 0.5rem; }
-        .message.success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        .message.error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-        .message.warning { background: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
-        .message.info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
-        .p-card { margin-bottom: 1.5rem; background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .message.success { background: #1a4731; color: #75e09a; border: 1px solid #2d6a4f; }
+        .message.error { background: #4a1520; color: #f88; border: 1px solid #7c2d35; }
+        .message.warning { background: #4a3800; color: #ffd060; border: 1px solid #7a5c00; }
+        .message.info { background: #0c3547; color: #7dd3f0; border: 1px solid #1a6080; }
+        .p-card { margin-bottom: 1.5rem; background: var(--surface-card); color: var(--text-color); padding: 1.5rem; border-radius: 10px; box-shadow: 0 2px 12px rgba(0,0,0,0.4); border: 1px solid var(--surface-border); }
         .form-field { margin-bottom: 1rem; }
         .form-field label { display: block; font-weight: 600; margin-bottom: 0.3rem; color: var(--text-color); }
-        .form-field input[type=text], .form-field input[type=password], .form-field input[type=email] {
+        .form-field input[type=text], .form-field input[type=password], .form-field input[type=email],
+        .form-field select, .form-field textarea {
             width: 100%; padding: 0.5rem 0.75rem; border: 1px solid var(--surface-border); border-radius: 6px;
             font-size: 1rem; font-family: inherit; transition: border-color 0.2s;
+            background: var(--surface-section); color: var(--text-color);
         }
-        .form-field input:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 2px var(--primary-200); }
+        .form-field input:focus, .form-field select:focus, .form-field textarea:focus {
+            outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 2px var(--primary-200);
+        }
         .form-actions { display: flex; gap: 0.75rem; align-items: center; margin-top: 1.5rem; }
         .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1.25rem; border: none; border-radius: 6px; font-size: 0.9rem; font-weight: 600; cursor: pointer; text-decoration: none; transition: background 0.2s, transform 0.1s; }
         .btn:active { transform: scale(0.98); }
-        .btn-primary { background: var(--primary-color); color: white; }
-        .btn-primary:hover { background: var(--primary-600); }
-        .btn-secondary { background: var(--surface-200); color: var(--text-color); }
-        .btn-secondary:hover { background: var(--surface-300); }
-        .btn-danger { background: #dc3545; color: white; }
-        .btn-danger:hover { background: #c82333; }
+        .btn-primary { background: var(--primary-color); color: #fff; }
+        .btn-primary:hover { background: var(--primary-600); color: #fff; }
+        .btn-secondary { background: var(--surface-300); color: var(--text-color); border: 1px solid var(--surface-border); }
+        .btn-secondary:hover { background: var(--surface-400); color: var(--text-color); }
+        .btn-danger { background: #c0392b; color: #fff; }
+        .btn-danger:hover { background: #a93226; color: #fff; }
         .btn-sm { padding: 0.3rem 0.75rem; font-size: 0.8rem; }
         table { width: 100%; border-collapse: collapse; }
-        th { background: var(--surface-100); font-weight: 600; text-align: left; padding: 0.6rem 0.8rem; border-bottom: 2px solid var(--surface-border); }
-        td { padding: 0.6rem 0.8rem; border-bottom: 1px solid var(--surface-border); }
-        tr:hover td { background: var(--surface-50); }
+        th { background: var(--surface-section); color: var(--text-color); font-weight: 600; text-align: left; padding: 0.6rem 0.8rem; border-bottom: 2px solid var(--surface-border); }
+        td { padding: 0.6rem 0.8rem; border-bottom: 1px solid var(--surface-border); color: var(--text-color); }
+        tr:hover td { background: var(--surface-hover); }
         .badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600; }
-        .badge-success { background: #d4edda; color: #155724; }
-        .badge-secondary { background: var(--surface-200); color: var(--text-color-secondary); }
+        .badge-success { background: #1a4731; color: #75e09a; }
+        .badge-secondary { background: var(--surface-300); color: var(--text-color-secondary); }
         .errorlist { list-style: none; padding: 0; margin: 0.3rem 0; }
-        .errorlist li { color: #dc3545; font-size: 0.85rem; }
+        .errorlist li { color: #f88; font-size: 0.85rem; }
+        a { color: var(--primary-color); }
+        a:hover { color: var(--primary-400); }
     </style>
 </head>
 <body>
