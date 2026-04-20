@@ -9,5 +9,5 @@ class CustomUserAdmin(UserAdmin):
     list_display = ('username', 'email', 'role', 'email_verified', 'is_staff')
     list_filter = ('role', 'email_verified', 'is_staff')
     fieldsets = UserAdmin.fieldsets + (
-        ('Extra', {'fields': ('role', 'email_verified', 'email_verification_token')}),
+        ('Extra', {'fields': ('role', 'email_verified')}),
     )
