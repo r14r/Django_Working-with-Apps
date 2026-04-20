@@ -2,6 +2,7 @@ import uuid
 
 from django.contrib import messages
 from django.contrib.auth import get_user_model, login
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView, PasswordResetDoneView
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404, redirect, render
@@ -89,6 +90,11 @@ def resend_verification_email_view(request):
             messages.error(request, 'Keine unbestätigte Registrierung mit dieser E-Mail-Adresse gefunden.')
         return redirect('app_auth:verify_email_pending')
     return render(request, 'app_auth/resend_verification.html')
+
+
+@login_required
+def profile_view(request):
+    return render(request, 'app_auth/profile.html')
 
 
 def _send_verification_email(request, user):

@@ -6,6 +6,7 @@ from .views import (
     UserLogoutView,
     UserPasswordResetDoneView,
     UserPasswordResetView,
+    profile_view,
     register_view,
     resend_verification_email_view,
     verify_email_pending_view,
@@ -33,4 +34,5 @@ urlpatterns = [
     path('verify-email/pending/', verify_email_pending_view, name='verify_email_pending'),
     path('verify-email/<uuid:token>/', verify_email_view, name='verify_email'),
     path('verify-email/resend/', resend_verification_email_view, name='resend_verification'),
+    path('profile/', profile_view, name='profile'),
 ]
