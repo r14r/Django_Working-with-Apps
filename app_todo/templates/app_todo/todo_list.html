@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block title %}Meine Todos{% endblock %}
+
+{% block content %}
+<div class="p-card">
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem;">
+        <h2 style="margin:0; color: var(--primary-color);"><i class="pi pi-list"></i> Meine To-dos</h2>
+        <a href="{% url 'app_todo:create' %}" class="btn btn-primary btn-sm"><i class="pi pi-plus"></i> Neues To-do</a>
+    </div>
+
+    {% if items %}
+    <div id="todo-app">
+        <table>
+            <thead>
+                <tr>
+                    <th>Titel</th>
+                    <th>Status</th>
+                    <th>Beschreibung</th>
+                    <th>Aktionen</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td style="{% if item.is_done %}text-decoration:line-through; color: var(--text-color-secondary);{% endif %}">
+                        {{ item.title }}
+                    </td>
+                    <td>
+                        {% if item.is_done %}
+                            <span class="badge badge-success"><i class="pi pi-check"></i> Erledigt</span>
+                        {% else %}
+                            <span class="badge badge-secondary"><i class="pi pi-clock"></i> Offen</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ item.description|default:'-' }}</td>
+                    <td>
+                        <a href="{% url 'app_todo:update' item.pk %}" class="btn btn-secondary btn-sm"><i class="pi pi-pencil"></i></a>
+                        <a href="{% url 'app_todo:toggle' item.pk %}" class="btn btn-secondary btn-sm" title="Toggle">
+                            <i class="pi {% if item.is_done %}pi-times{% else %}pi-check{% endif %}"></i>
+                        </a>
+                        <a href="{% url 'app_todo:delete' item.pk %}" class="btn btn-danger btn-sm"><i class="pi pi-trash"></i></a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <p style="color: var(--text-color-secondary); text-align:center; padding:2rem 0;">
+            <i class="pi pi-inbox" style="font-size:2rem; display:block; margin-bottom:0.5rem;"></i>
+            Du hast noch keine To-dos.
+        </p>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const { createApp, ref } = Vue;
+createApp({
+    setup() {
+        return {};
+    }
+}).mount('#todo-app');
+</script>
+{% endblock %}

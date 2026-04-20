@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}User Management{% endblock %}
+
+{% block content %}
+<div class="p-card">
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem;">
+        <h2 style="margin:0; color: var(--primary-color);"><i class="pi pi-users"></i> User Management</h2>
+        <div style="display:flex; gap:0.5rem;">
+            <a href="{% url 'app_admin:user_add' %}" class="btn btn-primary btn-sm"><i class="pi pi-plus"></i> Add User</a>
+            <a href="{% url 'app_admin:group_list' %}" class="btn btn-secondary btn-sm"><i class="pi pi-tag"></i> Manage Groups</a>
+        </div>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Groups</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for u in users %}
+            <tr>
+                <td><strong>{{ u.username }}</strong></td>
+                <td>{{ u.email|default:'-' }}</td>
+                <td>
+                    {% if u.is_superuser %}
+                        <span class="badge badge-success">Superuser</span>
+                    {% elif u.is_staff %}
+                        <span class="badge" style="background:#cce5ff;color:#004085;">Staff</span>
+                    {% else %}
+                        <span class="badge badge-secondary">User</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if u.is_active %}
+                        <span class="badge badge-success"><i class="pi pi-check"></i> Active</span>
+                    {% else %}
+                        <span class="badge" style="background:#f8d7da;color:#721c24;">Inactive</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% for g in u.groups.all %}
+                        <span class="badge badge-secondary">{{ g.name }}</span>
+                    {% empty %}
+                        <span style="color: var(--text-color-secondary);">-</span>
+                    {% endfor %}
+                </td>
+                <td>
+                    <a href="{% url 'app_admin:user_change_password' u.pk %}" class="btn btn-secondary btn-sm" title="Change Password"><i class="pi pi-lock"></i></a>
+                    <a href="{% url 'app_admin:user_assign_groups' u.pk %}" class="btn btn-secondary btn-sm" title="Assign Groups"><i class="pi pi-tag"></i></a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="6" style="text-align:center; padding:2rem; color: var(--text-color-secondary);">No users found.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

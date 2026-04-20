@@ -15,8 +15,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'main',
-    'auth_app',
-    'todo',
+    'app_auth',
+    'app_todo',
+    'app_admin',
 ]
 
 MIDDLEWARE = [
@@ -71,13 +72,13 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-LOGIN_URL = 'auth_app:login'
-LOGIN_REDIRECT_URL = 'todo:list'
+LOGIN_URL = 'app_auth:login'
+LOGIN_REDIRECT_URL = 'app_todo:list'
 LOGOUT_REDIRECT_URL = 'main:home'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = 'auth_app.CustomUser'
+AUTH_USER_MODEL = 'app_auth.CustomUser'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = 'noreply@example.local'

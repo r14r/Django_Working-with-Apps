@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div style="max-width: 420px; margin: 3rem auto;">
+    <div class="p-card">
+        <h2 style="margin-top:0; color: var(--primary-color);"><i class="pi pi-sign-in"></i> Login</h2>
+        <form method="post">
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="form-field">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}<ul class="errorlist">{% for e in field.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+            </div>
+            {% endfor %}
+            {% if form.non_field_errors %}
+            <div class="message error">{{ form.non_field_errors }}</div>
+            {% endif %}
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary"><i class="pi pi-sign-in"></i> Einloggen</button>
+                <a href="{% url 'app_auth:register' %}" class="btn btn-secondary">Registrieren</a>
+            </div>
+        </form>
+        <p style="margin-top:1rem; font-size:0.9rem;">
+            <a href="{% url 'app_auth:password_reset' %}">Passwort vergessen?</a>
+        </p>
+    </div>
+</div>
+{% endblock %}
