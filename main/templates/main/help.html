@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}Help{% endblock %}
+
+{% block content %}
+<div style="max-width: 700px; margin: 2rem auto;">
+    <div class="p-card">
+        <h2 style="margin-top:0; color: var(--primary-color);"><i class="pi pi-question-circle"></i> Help &amp; Documentation</h2>
+        <p>Welcome to <strong>Django App</strong>. Here is a quick overview of the available features.</p>
+
+        <h3 style="color: var(--primary-color); margin-top:1.5rem;"><i class="pi pi-user-plus"></i> Registration &amp; Login</h3>
+        <ul style="line-height:2;">
+            <li>Create a new account via <strong>Register</strong>.</li>
+            <li>After registering, confirm your email address with the link sent to your inbox.</li>
+            <li>Use the <strong>Login</strong> page to sign in with your credentials.</li>
+            <li>Forgot your password? Use the <em>Forgot password?</em> link on the login page.</li>
+        </ul>
+
+        <h3 style="color: var(--primary-color); margin-top:1.5rem;"><i class="pi pi-list"></i> Todos</h3>
+        <ul style="line-height:2;">
+            <li>Create, edit, and delete to-do items from the <strong>Todos</strong> page.</li>
+            <li>Toggle an item's status between <em>Open</em> and <em>Done</em> using the check button.</li>
+        </ul>
+
+        <h3 style="color: var(--primary-color); margin-top:1.5rem;"><i class="pi pi-user"></i> Profile</h3>
+        <ul style="line-height:2;">
+            <li>View your account information on the <strong>Profile</strong> page.</li>
+            <li>Change your password via the <em>Change Password</em> button on the profile page.</li>
+        </ul>
+
+        <h3 style="color: var(--primary-color); margin-top:1.5rem;"><i class="pi pi-users"></i> Administration <span class="badge" style="background:#1a3a5c;color:#7dd3f0; vertical-align:middle;">Staff only</span></h3>
+        <ul style="line-height:2;">
+            <li>Manage users and assign roles via <strong>User Management</strong>.</li>
+            <li>Create and edit permission groups via <strong>Group Management</strong>.</li>
+        </ul>
+
+        <div class="form-actions" style="margin-top:1.5rem;">
+            <a href="/" class="btn btn-secondary"><i class="pi pi-home"></i> Back to Home</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
