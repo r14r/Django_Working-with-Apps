@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Profile – {{ user.username }}{% endblock %}
+
+{% block content %}
+<div style="max-width: 560px; margin: 2rem auto;">
+    <div class="p-card">
+        <h2 style="margin-top:0; color: var(--primary-color);"><i class="pi pi-user"></i> Profile</h2>
+        <table style="width:100%; border-collapse:collapse;">
+            <tr>
+                <th style="width:160px; background:none; border-bottom:1px solid var(--surface-border); padding:0.6rem 0; color:var(--text-color-secondary); font-weight:600;">Username</th>
+                <td style="border-bottom:1px solid var(--surface-border); padding:0.6rem 0;">{{ user.username }}</td>
+            </tr>
+            <tr>
+                <th style="background:none; border-bottom:1px solid var(--surface-border); padding:0.6rem 0; color:var(--text-color-secondary); font-weight:600;">Email</th>
+                <td style="border-bottom:1px solid var(--surface-border); padding:0.6rem 0;">{{ user.email|default:'—' }}</td>
+            </tr>
+            <tr>
+                <th style="background:none; border-bottom:1px solid var(--surface-border); padding:0.6rem 0; color:var(--text-color-secondary); font-weight:600;">First name</th>
+                <td style="border-bottom:1px solid var(--surface-border); padding:0.6rem 0;">{{ user.first_name|default:'—' }}</td>
+            </tr>
+            <tr>
+                <th style="background:none; border-bottom:1px solid var(--surface-border); padding:0.6rem 0; color:var(--text-color-secondary); font-weight:600;">Last name</th>
+                <td style="border-bottom:1px solid var(--surface-border); padding:0.6rem 0;">{{ user.last_name|default:'—' }}</td>
+            </tr>
+            <tr>
+                <th style="background:none; border-bottom:1px solid var(--surface-border); padding:0.6rem 0; color:var(--text-color-secondary); font-weight:600;">Role</th>
+                <td style="border-bottom:1px solid var(--surface-border); padding:0.6rem 0;">
+                    {% if user.is_superuser %}
+                        <span class="badge badge-success">Superuser</span>
+                    {% elif user.is_staff %}
+                        <span class="badge" style="background:#1a3a5c;color:#7dd3f0;">Staff</span>
+                    {% else %}
+                        <span class="badge badge-secondary">User</span>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th style="background:none; padding:0.6rem 0; color:var(--text-color-secondary); font-weight:600;">Member since</th>
+                <td style="padding:0.6rem 0;">{{ user.date_joined|date:"N j, Y" }}</td>
+            </tr>
+        </table>
+        <div class="form-actions" style="margin-top:1.5rem;">
+            <a href="{% url 'app_auth:password_reset' %}" class="btn btn-secondary"><i class="pi pi-lock"></i> Change Password</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

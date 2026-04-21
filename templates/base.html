@@ -9,20 +9,96 @@
     <style>
         * { box-sizing: border-box; }
         body { font-family: var(--font-family); background: var(--surface-ground); color: var(--text-color); margin: 0; padding: 0; }
-        .layout-wrapper { min-height: 100vh; display: flex; flex-direction: column; }
-        .layout-topbar { background: var(--primary-color); padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 60px; box-shadow: 0 2px 4px rgba(0,0,0,0.4); }
-        .layout-topbar a { color: white; text-decoration: none; font-weight: 600; font-size: 1.1rem; }
-        .layout-topbar nav { display: flex; gap: 1rem; align-items: center; }
-        .layout-topbar nav a { font-size: 0.9rem; font-weight: 400; padding: 0.4rem 0.8rem; border-radius: 4px; transition: background 0.2s; }
-        .layout-topbar nav a:hover { background: rgba(255,255,255,0.2); }
-        .layout-main { flex: 1; padding: 2rem; max-width: 1100px; margin: 0 auto; width: 100%; }
-        .messages { margin-bottom: 1rem; }
+
+        /* ===== TOPBAR ===== */
+        .layout-topbar {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            height: 60px; background: var(--primary-color);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 1.25rem; box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+        }
+        .topbar-left { display: flex; align-items: center; gap: 0.75rem; }
+        .topbar-toggle-btn {
+            background: none; border: none; color: white; font-size: 1.2rem;
+            cursor: pointer; padding: 0.4rem 0.5rem; border-radius: 4px;
+            display: flex; align-items: center; transition: background 0.2s; line-height: 1;
+        }
+        .topbar-toggle-btn:hover { background: rgba(255,255,255,0.2); }
+        .topbar-logo {
+            color: white; text-decoration: none; font-weight: 700;
+            font-size: 1.1rem; display: flex; align-items: center; gap: 0.4rem;
+        }
+        .topbar-logo:hover { color: rgba(255,255,255,0.85); }
+        .topbar-nav { display: flex; align-items: center; gap: 0.2rem; }
+        .topbar-nav-item {
+            color: white; text-decoration: none; font-size: 0.875rem; font-weight: 500;
+            padding: 0.4rem 0.7rem; border-radius: 4px;
+            display: flex; align-items: center; gap: 0.4rem;
+            transition: background 0.2s; white-space: nowrap;
+        }
+        .topbar-nav-item:hover { background: rgba(255,255,255,0.2); color: white; }
+        .topbar-nav-profile {
+            background: rgba(255,255,255,0.15);
+            border-radius: 20px; padding: 0.3rem 0.8rem;
+        }
+        .topbar-nav-profile:hover { background: rgba(255,255,255,0.28); }
+        .topbar-nav-divider { width: 1px; height: 22px; background: rgba(255,255,255,0.3); margin: 0 0.2rem; }
+
+        /* ===== SIDEBAR ===== */
+        .layout-sidebar {
+            position: fixed; top: 60px; left: 0;
+            width: 240px; height: calc(100vh - 60px);
+            background: var(--surface-card); border-right: 1px solid var(--surface-border);
+            overflow-y: auto; z-index: 90;
+            transform: translateX(0); transition: transform 0.28s ease;
+            padding: 0.75rem 0;
+        }
+        .layout-sidebar.sidebar-hidden { transform: translateX(-100%); }
+        .sidebar-overlay {
+            position: fixed; top: 60px; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5); z-index: 80;
+        }
+        .sidebar-section-label {
+            font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.1em; color: var(--text-color-secondary);
+            padding: 0.9rem 1.2rem 0.35rem;
+        }
+        .sidebar-item {
+            display: flex; align-items: center; gap: 0.7rem;
+            padding: 0.6rem 1.2rem; color: var(--text-color); text-decoration: none;
+            font-size: 0.9rem; font-weight: 500;
+            border-left: 3px solid transparent; transition: background 0.15s, border-color 0.15s;
+        }
+        .sidebar-item:hover {
+            background: var(--surface-hover); color: var(--primary-color);
+            border-left-color: var(--primary-color);
+        }
+        .sidebar-item i { width: 1.1rem; text-align: center; font-size: 0.95rem; flex-shrink: 0; }
+        .sidebar-divider { height: 1px; background: var(--surface-border); margin: 0.4rem 0.9rem; }
+
+        /* ===== LAYOUT ===== */
+        .layout-body { padding-top: 60px; min-height: 100vh; }
+        .layout-main {
+            margin-left: 240px; padding: 2rem;
+            transition: margin-left 0.28s ease;
+        }
+        .layout-main.main-no-sidebar { margin-left: 0; }
+        @media (max-width: 768px) {
+            .layout-main { margin-left: 0; }
+        }
+
+        /* ===== MESSAGES ===== */
+        .messages { margin-bottom: 1.25rem; }
         .message { padding: 0.75rem 1rem; border-radius: 6px; margin-bottom: 0.5rem; }
         .message.success { background: #1a4731; color: #75e09a; border: 1px solid #2d6a4f; }
         .message.error { background: #4a1520; color: #f88; border: 1px solid #7c2d35; }
         .message.warning { background: #4a3800; color: #ffd060; border: 1px solid #7a5c00; }
         .message.info { background: #0c3547; color: #7dd3f0; border: 1px solid #1a6080; }
+
+        /* ===== CARDS ===== */
         .p-card { margin-bottom: 1.5rem; background: var(--surface-card); color: var(--text-color); padding: 1.5rem; border-radius: 10px; box-shadow: 0 2px 12px rgba(0,0,0,0.4); border: 1px solid var(--surface-border); }
+
+        /* ===== FORMS ===== */
         .form-field { margin-bottom: 1rem; }
         .form-field label { display: block; font-weight: 600; margin-bottom: 0.3rem; color: var(--text-color); }
         .form-field input[type=text], .form-field input[type=password], .form-field input[type=email],
@@ -35,6 +111,8 @@
             outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 2px var(--primary-200);
         }
         .form-actions { display: flex; gap: 0.75rem; align-items: center; margin-top: 1.5rem; }
+
+        /* ===== BUTTONS ===== */
         .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1.25rem; border: none; border-radius: 6px; font-size: 0.9rem; font-weight: 600; cursor: pointer; text-decoration: none; transition: background 0.2s, transform 0.1s; }
         .btn:active { transform: scale(0.98); }
         .btn-primary { background: var(--primary-color); color: green; }
@@ -44,13 +122,19 @@
         .btn-danger { background: #c0392b; color: #fff; }
         .btn-danger:hover { background: #a93226; color: #fff; }
         .btn-sm { padding: 0.3rem 0.75rem; font-size: 0.8rem; }
+
+        /* ===== TABLE ===== */
         table { width: 100%; border-collapse: collapse; }
         th { background: var(--surface-section); color: var(--text-color); font-weight: 600; text-align: left; padding: 0.6rem 0.8rem; border-bottom: 2px solid var(--surface-border); }
         td { padding: 0.6rem 0.8rem; border-bottom: 1px solid var(--surface-border); color: var(--text-color); }
         tr:hover td { background: var(--surface-hover); }
+
+        /* ===== BADGES ===== */
         .badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600; }
         .badge-success { background: #1a4731; color: #75e09a; }
         .badge-secondary { background: var(--surface-300); color: var(--text-color-secondary); }
+
+        /* ===== MISC ===== */
         .errorlist { list-style: none; padding: 0; margin: 0.3rem 0; }
         .errorlist li { color: #f88; font-size: 0.85rem; }
         a { color: var(--primary-color); }
@@ -58,35 +142,114 @@
     </style>
 </head>
 <body>
-<div class="layout-wrapper">
+<div id="layout-app">
+
+    <!-- ===== TOP NAVIGATION BAR ===== -->
     <header class="layout-topbar">
-        <a href="/">🏠 Django App</a>
-        <nav>
+        <div class="topbar-left">
+            <button class="topbar-toggle-btn" @click="sidebarOpen = !sidebarOpen" title="Toggle sidebar">
+                <i class="pi pi-bars"></i>
+            </button>
+            <a href="/" class="topbar-logo"><i class="pi pi-prime"></i> Django App</a>
+        </div>
+        <nav class="topbar-nav">
             {% if user.is_authenticated %}
-                <a href="{% url 'app_todo:list' %}"><i class="pi pi-list"></i> Todos</a>
-                {% if user.is_staff or user.is_superuser %}
-                <a href="{% url 'app_admin:user_list' %}"><i class="pi pi-users"></i> Admin</a>
-                {% endif %}
-                <a href="{% url 'app_auth:logout' %}"><i class="pi pi-sign-out"></i> Logout ({{ user.username }})</a>
+                <a href="{% url 'app_auth:profile' %}" class="topbar-nav-item topbar-nav-profile" title="Profile">
+                    <i class="pi pi-user"></i> {{ user.username }}
+                </a>
+                <div class="topbar-nav-divider"></div>
+                <a href="{% url 'main:help' %}" class="topbar-nav-item" title="Help">
+                    <i class="pi pi-question-circle"></i> Help
+                </a>
+                <a href="{% url 'app_auth:logout' %}" class="topbar-nav-item" title="Logout">
+                    <i class="pi pi-sign-out"></i> Logout
+                </a>
             {% else %}
-                <a href="{% url 'app_auth:login' %}"><i class="pi pi-sign-in"></i> Login</a>
-                <a href="{% url 'app_auth:register' %}"><i class="pi pi-user-plus"></i> Register</a>
+                <a href="{% url 'main:help' %}" class="topbar-nav-item" title="Help">
+                    <i class="pi pi-question-circle"></i> Help
+                </a>
+                <div class="topbar-nav-divider"></div>
+                <a href="{% url 'app_auth:login' %}" class="topbar-nav-item">
+                    <i class="pi pi-sign-in"></i> Login
+                </a>
+                <a href="{% url 'app_auth:register' %}" class="topbar-nav-item">
+                    <i class="pi pi-user-plus"></i> Register
+                </a>
             {% endif %}
         </nav>
     </header>
-    <main class="layout-main">
-        {% if messages %}
-        <div class="messages">
-            {% for message in messages %}
-            <div class="message {{ message.tags }}">{{ message }}</div>
-            {% endfor %}
-        </div>
-        {% endif %}
-        {% block content %}{% endblock %}
-    </main>
+
+    <div class="layout-body">
+        <!-- Mobile sidebar overlay -->
+        <div v-if="sidebarOpen && isMobile" class="sidebar-overlay" @click="sidebarOpen = false"></div>
+
+        <!-- ===== SIDEBAR NAVIGATION ===== -->
+        <aside class="layout-sidebar" :class="{'sidebar-hidden': !sidebarOpen}">
+            <nav>
+                <a href="/" class="sidebar-item"><i class="pi pi-home"></i> Home</a>
+
+                {% if user.is_authenticated %}
+                <div class="sidebar-divider"></div>
+                <div class="sidebar-section-label">My Workspace</div>
+                <a href="{% url 'app_todo:list' %}" class="sidebar-item"><i class="pi pi-list"></i> Todos</a>
+                <a href="{% url 'app_auth:profile' %}" class="sidebar-item"><i class="pi pi-user"></i> Profile</a>
+
+                {% if user.is_staff or user.is_superuser %}
+                <div class="sidebar-divider"></div>
+                <div class="sidebar-section-label">Administration</div>
+                <a href="{% url 'app_admin:user_list' %}" class="sidebar-item"><i class="pi pi-users"></i> User Management</a>
+                <a href="{% url 'app_admin:group_list' %}" class="sidebar-item"><i class="pi pi-tag"></i> Group Management</a>
+                {% endif %}
+
+                <div class="sidebar-divider"></div>
+                <a href="{% url 'main:help' %}" class="sidebar-item"><i class="pi pi-question-circle"></i> Help</a>
+                <a href="{% url 'app_auth:logout' %}" class="sidebar-item"><i class="pi pi-sign-out"></i> Logout</a>
+                {% else %}
+                <div class="sidebar-divider"></div>
+                <a href="{% url 'main:help' %}" class="sidebar-item"><i class="pi pi-question-circle"></i> Help</a>
+                <a href="{% url 'app_auth:login' %}" class="sidebar-item"><i class="pi pi-sign-in"></i> Login</a>
+                <a href="{% url 'app_auth:register' %}" class="sidebar-item"><i class="pi pi-user-plus"></i> Register</a>
+                {% endif %}
+            </nav>
+        </aside>
+
+        <!-- ===== MAIN CONTENT ===== -->
+        <main class="layout-main" :class="{'main-no-sidebar': !sidebarOpen}">
+            {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                <div class="message {{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% block content %}{% endblock %}
+        </main>
+    </div>
 </div>
+
 <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
 <script src="https://unpkg.com/primevue/umd/primevue.min.js"></script>
+<script>
+const { createApp, ref, onMounted, onUnmounted } = Vue;
+createApp({
+    setup() {
+        const isMobile = ref(window.innerWidth < 768);
+        const sidebarOpen = ref(window.innerWidth >= 768);
+
+        function onResize() {
+            isMobile.value = window.innerWidth < 768;
+            if (window.innerWidth >= 768) {
+                sidebarOpen.value = true;
+            }
+        }
+
+        onMounted(() => window.addEventListener('resize', onResize));
+        onUnmounted(() => window.removeEventListener('resize', onResize));
+
+        return { sidebarOpen, isMobile };
+    }
+}).mount('#layout-app');
+</script>
 {% block scripts %}{% endblock %}
 </body>
 </html>
